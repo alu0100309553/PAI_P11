@@ -1,3 +1,17 @@
+/**
+ * Author: Rubén Labrador Páez.
+ * Email: alu0100309553@ull.edu.es
+ * Tit: Grado Ingeniería Informática - Universidad de La Laguna
+ * Course: 3 - Computación
+ * Subject: Programación de aplicaciones interactivas.
+ * Practice: 11
+ * Class/Program: Parabolic
+ * File: GraphPanel.java
+ * Description: This is a program to simulate parabolic movement.
+ * @author Rubén Labrador Páez
+ * @version 1.0.0 02/05/2016
+ **/
+
 package gui;
 
 import java.awt.Color;
@@ -10,94 +24,233 @@ import javax.swing.JPanel;
 
 public class GraphPanel extends JPanel {
   private int scale = 0;
-  private Hashtable <Integer, ArrayList<Point>> pintados = new Hashtable <Integer, ArrayList<Point>>();
-  private Color [] colors = {Color.RED, Color.BLUE, Color.YELLOW, Color.CYAN, Color.GREEN, Color.PINK, Color.ORANGE, Color.BLACK, Color.WHITE};
+  private Hashtable<Integer, ArrayList<Point>> painted = new Hashtable<Integer, ArrayList<Point>>();
+  private Color[] colors = { Color.RED, Color.BLUE, Color.YELLOW, Color.CYAN,
+      Color.GREEN, Color.PINK, Color.ORANGE, Color.BLACK, Color.WHITE };
   private boolean axis = false;
-  private Point actualPoint = new Point();
-  private int actualTiro = 0;
+  private Point actualPoint = new Point(-5,-5);
+  private int actualShoot = 0;
   private int vectorXA = 0;
   private int vectorYA = 0;
   private int vectorXB = 0;
   private int vectorYB = 0;
   private boolean vector = false;
+  private final double A_MIN_L = 0.05;
+  private final double A_MAX_L = 0.95;
+  private final double A_RED_F = 0.9;
+  private final double M_OFFSET_H = 0.01;
+  private final double M_OFFSET_V = 0.005;
+  private final int V_X_N_OFF = 40;
+  private final int V_Y_N_OFF = 5;
+  private final int H_X_N_OFF = 10;
+  private final int H_Y_N_OFF = 25;
+  private final int SM_OFF = 10;
+  private final int AH_OFF = 10;
+  private final int POINT_D = 6;
+  private final int POINT_OFF = 3;
+  private final int L_SM_LAPSE = 1;
+  private final int M_SM_LAPSE = 10;
+  private final int S_SM_LAPSE = 100;
+  private final int L_SM_PX_L = 3;
+  private final int M_SP_PX_L = 20;
+  
+  //Getters and setters
+  private int getScale() {
+    return scale;
+  }
+
+  private Hashtable<Integer, ArrayList<Point>> getPainted() {
+    return painted;
+  }
+
+  private Color[] getColors() {
+    return colors;
+  }
+
+  private boolean isAxis() {
+    return axis;
+  }
+
+  private Point getActualPoint() {
+    return actualPoint;
+  }
+
+  private int getActualShoot() {
+    return actualShoot;
+  }
+
+  private int getVectorXA() {
+    return vectorXA;
+  }
+
+  private int getVectorYA() {
+    return vectorYA;
+  }
+
+  private int getVectorXB() {
+    return vectorXB;
+  }
+
+  private int getVectorYB() {
+    return vectorYB;
+  }
+
+  private boolean isVector() {
+    return vector;
+  }
+
+  private void setScale(int scale) {
+    this.scale = scale;
+  }
+
+  private void setAxis(boolean axis) {
+    this.axis = axis;
+  }
+
+  private void setActualPoint(Point actualPoint) {
+    this.actualPoint = actualPoint;
+  }
+
+  private void setActualShoot(int actualShoot) {
+    this.actualShoot = actualShoot;
+  }
+
+  private void setVectorXA(int vectorXA) {
+    this.vectorXA = vectorXA;
+  }
+
+  private void setVectorYA(int vectorYA) {
+    this.vectorYA = vectorYA;
+  }
+
+  private void setVectorXB(int vectorXB) {
+    this.vectorXB = vectorXB;
+  }
+
+  private void setVectorYB(int vectorYB) {
+    this.vectorYB = vectorYB;
+  }
+
+  private void setVector(boolean vector) {
+    this.vector = vector;
+  }
+
   public void paintComponent(Graphics g) {
     super.paintComponent(g);
-    for (int tiro : pintados.keySet()){
-      g.setColor(colors[tiro%9]);
-      for (Point p : pintados.get(tiro)){
-        g.fillOval((p.x)-2, (p.y)-2, 4, 4);
+    g.setColor(getColors()[getActualShoot() % getColors().length]);
+    g.fillOval((getActualPoint().x) - POINT_OFF,
+        (getActualPoint().y) - POINT_OFF, POINT_D, POINT_D);
+    for (int tiro : getPainted().keySet()) {
+      g.setColor(getColors()[tiro % getColors().length]);
+      for (Point p : getPainted().get(tiro)) {
+        g.fillOval((p.x) - POINT_OFF, (p.y) - POINT_OFF, POINT_D, POINT_D);
       }
     }
-    if (axis){
+    if (isAxis()) {
       g.setColor(Color.BLACK);
       drawAx(g);
     }
-    if (vector){
+    if (isVector()) {
       g.setColor(Color.BLACK);
-      g.drawLine(vectorXA, vectorYA, vectorXB, vectorYB);
-      g.drawLine(vectorXB, vectorYB, vectorXB, vectorYB+10);
-      g.drawLine(vectorXB, vectorYB, vectorXB-10, vectorYB);
+      g.drawLine(getVectorXA(), getVectorYA(), getVectorXB(), getVectorYB());
+      g.drawLine(getVectorXB(), getVectorYB(), getVectorXB(),
+          (getVectorYB() + AH_OFF));
+      g.drawLine(getVectorXB(), getVectorYB(), (getVectorXB() - AH_OFF),
+          getVectorYB());
     }
-    g.setColor(colors[actualTiro%9]);
-    g.fillOval((actualPoint.x)-2, (actualPoint.y)-2, 4, 4);
+
   }
-  public void drawPoint (double x, double y, boolean safe, int tironumber){
-    int i = (int)((x * scale) + (this.getWidth() * 0.05));
-    int j = (int)((this.getHeight() * 0.95) - (y * scale));
-    actualPoint = new Point (i, j);
-    actualTiro = tironumber;
-    if (safe){
-      if (pintados.containsKey(tironumber)){
-        pintados.get(tironumber).add(new Point (i, j));
-      }else{
-        pintados.put(tironumber, new ArrayList <Point>());
-        pintados.get(tironumber).add(new Point (i,j));
+
+  //Method to set a point to draw
+  public void drawPoint(double x, double y, boolean safe, int shootnumber) {
+    int i = (int) ((x * getScale()) + (getWidth() * A_MIN_L));
+    int j = (int) ((getHeight() * A_MAX_L) - (y * getScale()));
+    setActualPoint(new Point(i, j));
+    setActualShoot(shootnumber);
+    if (safe) {
+      if (getPainted().containsKey(shootnumber)) {
+        getPainted().get(shootnumber).add(new Point(i, j));
+      } else {
+        getPainted().put(shootnumber, new ArrayList<Point>());
+        getPainted().get(shootnumber).add(new Point(i, j));
       }
     }
     repaint();
   }
 
-  private void drawAx (Graphics g){
-    g.drawLine((int)(this.getWidth()*0.05), (int)(this.getHeight()*0.95), (int)(this.getWidth()*0.95), (int)(this.getHeight()*0.95));
-    g.drawLine((int)(this.getWidth()*0.05), (int)(this.getHeight()*0.05), (int)(this.getWidth()*0.05), (int)(this.getHeight()*0.95));
-    int xpos = (int)(this.getWidth()*0.05)+ scale;
-    int yposA = (int)(this.getHeight()*0.95);
-    int yposB = (int)(this.getHeight()*0.96);
-    while (xpos < this.getWidth()*0.95){
-      g.drawLine(xpos,yposA , xpos, yposB);
-      xpos += scale; 
+  //Method to draw axis
+  private void drawAx(Graphics g) {
+    g.drawLine((int) (getWidth() * A_MIN_L), (int) (getHeight() * A_MAX_L),
+        (int) (getWidth() * A_MAX_L), (int) (getHeight() * A_MAX_L));
+    g.drawLine((int) (getWidth() * A_MIN_L), (int) (getHeight() * A_MIN_L),
+        (int) (getWidth() * A_MIN_L), (int) (getHeight() * A_MAX_L));
+    int xpos = (int) (getWidth() * A_MIN_L);
+    int yposA = (int) (getHeight() * A_MAX_L);
+    int yposB = (int) (getHeight() * (A_MAX_L + M_OFFSET_H));
+    int marks = 0;
+    if (getScale() <= L_SM_PX_L) {
+      marks = S_SM_LAPSE;
+    } else if (getScale() <= M_SP_PX_L) {
+      marks = M_SM_LAPSE;
+    } else {
+      marks = L_SM_LAPSE;
     }
-    int ypos = (int)(this.getHeight()*0.95)- scale;
-    int xposA = (int)(this.getWidth()*0.05);
-    int xposB = (int)(this.getWidth()*0.04);
-    while (ypos > this.getHeight()*0.05){
-      g.drawLine(xposA,ypos , xposB, ypos);
-      ypos -= scale; 
+
+    int markCounter = 0;
+    while (xpos < getWidth() * A_MAX_L) {
+      g.drawLine(xpos, yposA, xpos, yposB);
+      if (markCounter % marks == 0) {
+        g.drawLine(xpos, yposA, xpos, yposB + SM_OFF);
+        g.drawString("" + markCounter, xpos - H_X_N_OFF, yposB + H_Y_N_OFF);
+
+      }
+      xpos += getScale();
+      markCounter++;
+
+    }
+    int ypos = (int) (getHeight() * A_MAX_L);
+    int xposA = (int) (getWidth() * A_MIN_L);
+    int xposB = (int) (getWidth() * (A_MIN_L - M_OFFSET_V));
+    markCounter = 0;
+    while (ypos > getHeight() * A_MIN_L) {
+      g.drawLine(xposA, ypos, xposB, ypos);
+
+      if (markCounter % marks == 0) {
+        g.drawLine(xposA, ypos, xposB - SM_OFF, ypos);
+        g.drawString("" + markCounter, xposB - V_X_N_OFF, ypos + V_Y_N_OFF);
+
+      }
+      ypos -= getScale();
+      markCounter++;
     }
   }
-  public void drawAxis (double maxX, double maxY){
-    if (!axis){
-      int maxXpx = (int) (this.getWidth() * 0.9);
-      int maxYpx = (int) (this.getHeight() * 0.9);
-      scale = (int) Math.min((maxXpx/maxX), (maxYpx/maxY));
+
+  //Method to set axis
+  public void drawAxis(double maxX, double maxY) {
+    if (!isAxis()) {
+      int maxXpx = (int) (getWidth() * A_RED_F);
+      int maxYpx = (int) (getHeight() * A_RED_F);
+      setScale((int) Math.min((maxXpx / maxX), (maxYpx / maxY)));
     }
-    axis = true;
+    setAxis(true);
     repaint();
   }
 
-  public void reset (){
-    pintados.clear();
-    axis = false;
-    actualPoint = new Point();
-    vector = false;
+  //Method to reset the panel
+  public void reset() {
+    getPainted().clear();
+    setAxis(false);
+    setActualPoint(new Point(-5,-5));
+    setVector(false);
     repaint();
   }
 
-  public void setVector(double vx, double vy){
-    vectorXA = (int)(this.getWidth()*0.05);
-    vectorYA = (int)(this.getHeight()*0.95);
-    vectorXB = vectorXA+(int)(vx*40/100);
-    vectorYB = vectorYA-(int)(vy*40/100);
-    vector = true;
+  //Method to set movement initial vector
+  public void setVector(double vx, double vy) {
+    setVectorXA((int) (getWidth() * A_MIN_L));
+    setVectorYA((int) (getHeight() * A_MAX_L));
+    setVectorXB(vectorXA + (int) vx);
+    setVectorYB(vectorYA - (int) vy);
+    setVector(true);
   }
 }

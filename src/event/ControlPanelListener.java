@@ -4,12 +4,12 @@
  * Tit: Grado Ingeniería Informática - Universidad de La Laguna
  * Course: 3 - Computación
  * Subject: Programación de aplicaciones interactivas.
- * Practice: 9
- * Class/Program: Random Walk
- * File: NewDirectionEventListener.java
- * Description: This is a program that reproduce the two dimension random walk.
+ * Practice: 11
+ * Class/Program: Parabolic
+ * File: ControlPanelListener.java
+ * Description: This is a program to simulate parabolic movement.
  * @author Rubén Labrador Páez
- * @version 1.0.0 18/04/2016
+ * @version 1.0.0 02/05/2016
  **/
 
 package event;
