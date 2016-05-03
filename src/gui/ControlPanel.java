@@ -93,6 +93,9 @@ public class ControlPanel extends JPanel implements ControlPanelListener {
     lanzarBt = new JButton("Lanzar");
     pausaBt = new JButton("Pausa");
     borrarBt = new JButton("Borrar");
+    lanzarBt.setName("lanzar");
+    pausaBt.setName("pausa");
+    borrarBt.setName("borrar");
     btPanel.add(lanzarBt);
     btPanel.add(pausaBt);
     btPanel.add(borrarBt);

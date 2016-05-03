@@ -54,6 +54,7 @@ public class SliderWTex extends JPanel {
     text = new JTextField();
     text.addActionListener(new MyActionListener());
     text.setPreferredSize(textDim);
+    text.setName("text_" + name);
     slider = new JSlider();
     slider.addChangeListener(new SliderListener());
     slider.setMaximum(max);
@@ -64,6 +65,7 @@ public class SliderWTex extends JPanel {
     slider.setPaintTicks(true);
     slider.setPaintLabels(true);
     slider.setPreferredSize(sliderDim);
+    slider.setName("slider_" + name);
     setLayout(new BorderLayout());
     add(slider, BorderLayout.CENTER);
     add(text, BorderLayout.EAST);

@@ -53,7 +53,7 @@ public class GUI extends JApplet {
     return graph;
   }
 
-  private ControlPanel getControl() {
+  public ControlPanel getControl() {
     return control;
   }
 
@@ -61,7 +61,7 @@ public class GUI extends JApplet {
     return calc;
   }
 
-  private Timer getTimer() {
+  public Timer getTimer() {
     return timer;
   }
 
@@ -69,7 +69,7 @@ public class GUI extends JApplet {
     return timeCounter;
   }
 
-  private int getShootCounter() {
+  public int getShootCounter() {
     return shootCounter;
   }
 
