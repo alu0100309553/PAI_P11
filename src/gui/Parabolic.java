@@ -129,7 +129,7 @@ public class Parabolic extends JApplet {
 
   //Y pos in time function
   private double ypos(double t) {
-    return (-0.5 * G * t * t) + (getVx0() * t) + getH0();
+    return (-0.5 * G * t * t) + (getVy0() * t) + getH0();
   }
 
   //V in time function
